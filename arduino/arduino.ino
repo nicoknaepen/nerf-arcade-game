@@ -1,51 +1,58 @@
 int hitState = 0;
-int led2Active = 0;
+int arrObjects[] = {8, 9, 10, 11, 12};
+int arrLeds[] = {2, 3, 4, 5, 6};
+int i;
 
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(2, OUTPUT);
+  // Initialize pinMode for leds and buttons/objects to hit.
+  for (i = 0; i < 5; i = i + 1) {
+    pinMode(arrLeds[i], OUTPUT);
+    pinMode(arrObjects[i], INPUT);
+  }
+  // Initialize pinMode for the buzzer.
   pinMode(7, OUTPUT);
-  initTones();
-  initLeds();
+  // Test the tones and the leds.
+  testTones();
+  testLeds();
 }
 
 void loop() {
-  objectHitVerification(8, 2);
-}
-
-int objectHitVerification(int object, int led) {
-  hitState = digitalRead(object);
-
-  if (hitState == HIGH) {
-    if (led2Active == 0) {
-      objectHit(led);
-    }
+  for (i = 0; i < 5; i = i + 1) {
+    objectHitVerification(i);
   }
 }
 
-int objectHit(int led) {
+int objectHitVerification(int i) {
+  hitState = digitalRead(arrObjects[i]);
+  if (hitState == HIGH) {
+    objectHit(i);
+  }
+}
+
+int objectHit(int i) {
   objectHitTone(500,750);  
-  digitalWrite(2, HIGH);
-  led2Active = 1;  
+  digitalWrite(arrLeds[i], HIGH);
 }
 
 int objectHitTone(int tone1, int tone2){
   tone(7, tone1, 100);
-  delay(120);
+  delay(110);
   tone(7, tone1, 100);
-  delay(120);
+  delay(110);
   tone(7, tone2, 250);
-  delay(120);
+  delay(110);
 }
 
-void initTones() {
+void testTones() {
   objectHitTone(500,750);  
   objectHitTone(500,1000);  
 }
 
-void initLeds() {
-  digitalWrite(2, HIGH);
-  delay(120);
-  digitalWrite(2, LOW); 
+void testLeds() {
+  for (i = 0; i < 5; i = i + 1) {
+    digitalWrite(arrLeds[i], HIGH);
+    delay(60);
+    digitalWrite(arrLeds[i], LOW); 
+  }
 }
 
